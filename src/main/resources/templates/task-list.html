@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table, td, tr {
+
+        }
+        .table-content{
+            border: solid black 2px;
+            padding-right: 10px;
+            padding-left: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    task page
+    <div>
+        <table>
+            <tr>
+                <td class="table-content">Status </td>
+                <td class="table-content">Name</td>
+                <td class="table-content">Summary</td>
+                <td class="table-content">Due Date</td>
+            </tr>
+            <tr>
+                <form method="post" role="form" th:action="@{/task/save}" th:object="${task}">
+                    <td>
+                        <select th:field="*{taskStatus.id}">
+                            <option th:value="1" th:text="Done"></option>
+                            <option th:value="2" th:text="BOS"></option>
+                        </select>
+                    </td>
+                    <td><input type="text" placeholder="Name" th:field="*{name}"></td>
+                    <td><input type="text" placeholder="Summary" th:field="*{summary}"></td>
+
+                    <td><input type="date" placeholder="Due Date" th:field="*{dueDate}"></td>
+                    <td><button type="submit">New Task</button></td>
+                </form>
+            </tr>
+            <tr th:each="task: ${tasks}">
+                <td class="table-content" th:text="${task.getTaskStatus()?.getName()}"/>
+                <td class="table-content" th:text="${task.getName()}"/>
+                <td class="table-content" th:text="${task.getSummary()}"/>
+                <td class="table-content" th:text="${task.getDueDate()}"/>
+                <td><a th:href="@{/task/{taskId}(taskId=${task.getId()})}">Update</a></td>
+                <td><a th:href="@{/task/{taskId}/delete(taskId=${task.getId()})}">Delete</a></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+</body>
+</html>

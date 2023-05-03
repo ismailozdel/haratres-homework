@@ -7,6 +7,29 @@
 </head>
 <body>
 <div layout:fragment="content">
+    <form method="post" th:action="@{/task/{id}/update(id=${task.getId()})}" th:object="${task}">
+        <div class="form-element">
+            <label>Task Name</label>
+            <input type="text" th:field="*{name}">
+        </div>
+        <div class="form-element">
+            <label>Task Summary</label>
+            <input type="text" th:field="*{summary}">
+        </div>
+        <div class="form-element">
+            <label>Task Due Date</label>
+            <input type="date" th:field="*{dueDate}">
+        </div>
+        <div class="form-element">
+            <label>Task Status</label>
+            <select th:field="*{taskStatus.id}">
+                <option th:value="1" th:text="Done"></option>
+                <option th:value="2" th:text="BOS"></option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-secondary">Update</button>
+    </form>
 </div>
+
 </body>
 </html>

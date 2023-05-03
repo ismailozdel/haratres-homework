@@ -4,9 +4,16 @@ import com.example.demo.dto.LoginDto;
 import com.example.demo.dto.RegisterDto;
 import com.example.demo.models.User;
 import com.example.demo.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpCookie;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class AuthController {
@@ -48,12 +55,21 @@ public class AuthController {
         return "login-page";
     }
     @PostMapping("/login")
-    public String login(@ModelAttribute("user")LoginDto user,Model model){
+    public String login(@ModelAttribute("user")LoginDto user, Model model, HttpServletResponse response){
         User userQuery = userService.findByUsername(user.getUsername());
         if(user.getUsername() != null && userQuery !=null && userQuery.getPassword().equals(user.getPassword())){
-            System.out.println("yeyyy");
+            Cookie cookie = new Cookie("user_id",Long.toString(userQuery.getId()));
+            response.addCookie(cookie);
+            return "redirect:/";
         }
         else System.out.println("nayy");
-        return "redirect:/";
+        return "login-page";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletResponse response){
+        Cookie cookie = new Cookie("user_id",null);
+        response.addCookie(cookie);
+        return "redirect:/login";
     }
 }
