@@ -24,29 +24,25 @@ public class TaskServiceImpl implements TaskService{
 
     @Override
     public void save(TaskDto taskDto) {
-        Task task = new Task();
-        task.setName(taskDto.getName());
-        task.setSummary(taskDto.getSummary());
-        task.setDueDate(taskDto.getDueDate());
-        TaskStatus taskStatus = taskStatusRepository.getById(taskDto.getTaskStatus().getId());
-        task.setTaskStatus(taskStatus);
-        taskRepository.save(task);
+        taskRepository.save(Task.builder().name(taskDto.getName())
+                .summary(taskDto.getSummary())
+                .dueDate(taskDto.getDueDate())
+                .taskStatus(taskStatusRepository.getById(taskDto.getTaskStatus().getId()))
+                .user(taskDto.getUser()).build());
     }
 
     @Override
     public void update(TaskDto taskDto) {
         Task task = taskRepository.findById(taskDto.getId());
         if(task !=null){
-
             Task task1 = Task.builder().id(taskDto.getId())
                     .name(taskDto.getName())
-                    .summary(task.getSummary())
-                            .dueDate(taskDto.getDueDate()).taskStatus(taskStatusRepository.getById(taskDto.getTaskStatus().getId())).user(task.getUser()).build();
+                    .summary(taskDto.getSummary())
+                    .dueDate(taskDto.getDueDate())
+                    .taskStatus(taskStatusRepository.getById(taskDto.getTaskStatus().getId()))
+                    .user(taskDto.getUser()).build();
             taskRepository.save(task1);
-            System.out.println(task1.getTaskStatus().getName());
         }
-        System.out.println("nein");
-
     }
 
     @Override
@@ -61,7 +57,7 @@ public class TaskServiceImpl implements TaskService{
 
     @Override
     public List<Task> findByUserId(long id) {
-        return taskRepository.findAllByUserId(id);
+        return taskRepository.findByUserId(id);
     }
 
     @Override

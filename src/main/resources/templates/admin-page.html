@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin</title>
+  <style>
+    .table-content{
+      border: solid black 2px;
+      padding-right: 10px;
+      padding-left: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div layout:fragment="content">
+  <table>
+    <tr>
+      <td class="table-content">First Name</td>
+      <td class="table-content">Last Name</td>
+      <td class="table-content">Username</td>
+      <td class="table-content">Email</td>
+    </tr>
+
+    <tr th:each="user: ${users}">
+      <td class="table-content" th:text="${user.getFirstName()}"/>
+      <td class="table-content" th:text="${user.getLastName()}"/>
+      <td class="table-content" th:text="${user.getUsername()}"/>
+      <td class="table-content" th:text="${user.getEmail()}"/>
+      <td class="table-content"><a th:href="@{/admin/user_detail/{id}(id=${user.getId()})}"> View</a></td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

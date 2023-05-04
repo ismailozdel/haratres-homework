@@ -1,6 +1,7 @@
 package com.example.demo.dto;
 
 import com.example.demo.models.TaskStatus;
+import com.example.demo.models.User;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,4 +15,5 @@ public class TaskDto {
     private String summary;
     private long status;
     private TaskStatus taskStatus;
+    private User user;
 }

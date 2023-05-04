@@ -4,9 +4,11 @@ import com.example.demo.dao.RoleRepository;
 import com.example.demo.dao.UserRepository;
 import com.example.demo.dto.RegisterDto;
 import com.example.demo.models.User;
-import com.example.demo.models.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -22,15 +24,34 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void save(RegisterDto registerDto) {
-        User user = new User();
-        user.setUsername(registerDto.getUsername());
-        user.setEmail(registerDto.getEmail());
-        user.setFirstName(registerDto.getFirstName());
-        user.setLastName(registerDto.getLastName());
-        user.setPassword(registerDto.getPassword());
-        Role role = roleRepository.findByName("STANDART_USER");
-        user.setRole(role);
-        userRepository.save(user);
+        userRepository.save(User.builder()
+                .username(registerDto.getUsername())
+                .email(registerDto.getEmail())
+                .firstName(registerDto.getFirstName())
+                .lastName(registerDto.getLastName())
+                .password(registerDto.getPassword())
+                .role(roleRepository.findByName("STANDART_USER")).build());
+    }
+
+    @Override
+    public User saveAndFlush(RegisterDto registerDto) {
+        return userRepository.saveAndFlush(User.builder()
+                .username(registerDto.getUsername())
+                .email(registerDto.getEmail())
+                .firstName(registerDto.getFirstName())
+                .lastName(registerDto.getLastName())
+                .password(registerDto.getPassword())
+                .role(roleRepository.findByName("STANDART_USER")).build());
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User findById(long id) {
+        return userRepository.findById(id);
     }
 
     @Override
