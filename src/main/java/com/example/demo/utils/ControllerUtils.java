@@ -29,8 +29,7 @@ public class ControllerUtils {
             if(cookie.getName().equals("user_id")
                     && !cookie.getValue().isEmpty()){
                 User user = userService.findById(Long.parseLong(cookie.getValue()));
-                if(user != null) return user;
-                else return null;
+                return user;
             }
         }
         return null;

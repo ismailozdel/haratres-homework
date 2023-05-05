@@ -4,6 +4,7 @@ import com.example.demo.dto.TaskDto;
 import com.example.demo.models.Task;
 import com.example.demo.models.User;
 import com.example.demo.service.TaskService;
+import com.example.demo.service.TaskStatusService;
 import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -19,17 +20,19 @@ import static com.example.demo.utils.ControllerUtils.isAuthenticated;
 @Controller
 public class AdminController {
 
-    private UserService userService;
-    private TaskService taskService;
+    final private UserService userService;
+    final private TaskService taskService;
 
-    public AdminController(UserService userService, TaskService taskService) {
+    final private TaskStatusService taskStatusService;
+
+    public AdminController(UserService userService, TaskService taskService,TaskStatusService taskStatusService) {
         this.userService = userService;
         this.taskService = taskService;
+        this.taskStatusService = taskStatusService;
     }
 
     private boolean isAdmin(User user){
-        if(user.getRole().getName().equals("ADMIN")) return true;
-        else return false;
+        return user.getRole().getName().equals("ADMIN");
     }
 
     @GetMapping("/admin")
@@ -49,7 +52,8 @@ public class AdminController {
         if(user != null) {
             model.addAttribute("user", user);
             model.addAttribute("task", taskDto);
-            model.addAttribute("tasks", taskService.findByUserId(user.getId()));
+            model.addAttribute("tasks", user.getTasks());
+            model.addAttribute("taskStatuses",taskStatusService.findAll());
         }
         else
             return "redirect:/admin";
@@ -85,7 +89,7 @@ public class AdminController {
         if(!isAuthenticated(request,userService)) return "redirect:/login";
         if(!isAdmin(getUserInCookies(request,userService))) return "redirect:/";
         Task task = taskService.findById(task_id);
-        if(task.getUser().getId() == id && task != null)
+        if(task.getUser().getId() == id)
             taskService.delete(task_id);
         return "redirect:/admin/user_detail/{id}";
     }

@@ -31,8 +31,7 @@
                 <form method="post" role="form" th:action="@{/task/save}" th:object="${task}">
                     <td>
                         <select th:field="*{taskStatus.id}">
-                            <option th:value="1" th:text="Done"></option>
-                            <option th:value="2" th:text="BOS"></option>
+                            <option th:each="taskStatus: ${taskStatuses}" th:value="${taskStatus.getId()}" th:text="${taskStatus.getName()}"></option>
                         </select>
                     </td>
                     <td><input type="text" placeholder="Name" th:field="*{name}"></td>

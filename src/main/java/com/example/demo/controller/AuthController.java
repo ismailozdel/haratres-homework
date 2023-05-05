@@ -15,7 +15,7 @@ import static com.example.demo.utils.ControllerUtils.*;
 
 @Controller
 public class AuthController {
-    private UserService userService;
+    final private UserService userService;
 
     public AuthController(UserService userService) {
         this.userService = userService;
@@ -42,11 +42,11 @@ public class AuthController {
         if(isAuthenticated(request,userService)) return "redirect:/";
         User existingEmail = userService.findByEmail(user.getEmail());
         if(existingEmail != null && user.getEmail() != null){
-            return "This email already used";
+            return "redirect:/register";
         }
         User existingUsername = userService.findByUsername(user.getUsername());
         if(existingUsername != null && user.getUsername() != null){
-            return "This username already used";
+            return "redirect:/register";
         }
         User user1 = userService.saveAndFlush(user);
         Cookie cookie = new Cookie("user_id",Long.toString(user1.getId()));
@@ -55,13 +55,15 @@ public class AuthController {
         return "redirect:/";
     }
     @GetMapping("/login")
-    public String getLoginPage(Model model){
+    public String getLoginPage(Model model, HttpServletRequest request){
+        if(isAuthenticated(request,userService)) return "redirect:/";
         LoginDto user = new LoginDto();
         model.addAttribute("user",user);
         return "login-page";
     }
     @PostMapping("/login")
-    public String login(@ModelAttribute("user")LoginDto user, Model model, HttpServletResponse response){
+    public String login(@ModelAttribute("user")LoginDto user, HttpServletResponse response,HttpServletRequest request){
+        if(isAuthenticated(request,userService)) return "redirect:/";
         User userQuery = userService.findByUsername(user.getUsername());
         if(user.getUsername() != null && userQuery !=null && userQuery.getPassword().equals(user.getPassword())){
             Cookie cookie = new Cookie("user_id",Long.toString(userQuery.getId()));
